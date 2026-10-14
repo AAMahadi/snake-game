@@ -1,18 +1,71 @@
 #include "../include/snake.h"
 
+void initSnake(Snake *snake) {
+    //body segments initialization
+    for(int i = 1; i < snake->currentLength; i++) {
+        //going right
+        if(snake->direction.x == snake->segmentSize && snake->direction.y == 0) {
+            snake->body[i].position.x = snake->body[i-1].position.x - snake->segmentSize;
+            snake->body[i].position.y = snake->body[i-1].position.y;
+        }
+        //going left
+        else if(snake->direction.x == (-1)*snake->segmentSize && snake->direction.y == 0) {
+            snake->body[i].position.x = snake->body[i-1].position.x + snake->segmentSize;
+            snake->body[i].position.y = snake->body[i-1].position.y;
+        }
+        //going up
+        else if(snake->direction.x == 0 && snake->direction.y == (-1)*snake->segmentSize) {
+            snake->body[i].position.x = snake->body[i-1].position.x;
+            snake->body[i].position.y = snake->body[i-1].position.y + snake->segmentSize;
+        }
+        //going down
+        else if(snake->direction.x == 0 && snake->direction.y == snake->segmentSize) {
+            snake->body[i].position.x = snake->body[i-1].position.x;
+            snake->body[i].position.y = snake->body[i-1].position.y - snake->segmentSize;
+        } 
+    }
+
+    //eye initialization
+    if(snake->direction.x == (-1)*snake->segmentSize && snake->direction.y == 0) {
+        snake->leftEyePos = (Vector2){snake->body[0].position.x+6, snake->body[0].position.y+11};
+        snake->rightEyePos = (Vector2){snake->body[0].position.x+6, snake->body[0].position.y+3};
+    }
+    else if(snake->direction.x == snake->segmentSize && snake->direction.y == 0) {
+        snake->leftEyePos = (Vector2){snake->body[0].position.x+9, snake->body[0].position.y+11};
+        snake->rightEyePos = (Vector2){snake->body[0].position.x+9, snake->body[0].position.y+3};
+    }
+    else if(snake->direction.x == 0 && snake->direction.y == (-1)*snake->segmentSize) {
+        snake->leftEyePos = (Vector2){snake->body[0].position.x+3, snake->body[0].position.y+4};
+        snake->rightEyePos = (Vector2){snake->body[0].position.x+11, snake->body[0].position.y+4};
+    }
+    else if(snake->direction.x == 0 && snake->direction.y == snake->segmentSize) {
+        snake->leftEyePos = (Vector2){snake->body[0].position.x+3, snake->body[0].position.y+10};
+        snake->rightEyePos = (Vector2){snake->body[0].position.x+11, snake->body[0].position.y+10};
+    }
+}
+
 void drawSnake(Snake *snake) {
     for(int i = 0; i < snake->currentLength; i++) {
-        if(i != 0) {
-            snake->body[i].position = (Vector2){snake->body[i-1].position.x, snake->body[i-1].position.y + snake->segmentSize};
-        }
-        
-        //eyes
-        DrawCircle(snake->leftEyePos.x, snake->leftEyePos.y, 1.5, WHITE);
-        DrawCircle(snake->rightEyePos.x, snake->rightEyePos.y, 1.5, WHITE);
         //segments
-        DrawRectangle(snake->body[i].position.x, snake->body[i].position.y, snake->segmentSize, snake->segmentSize, GREEN);
-        DrawRectangleLines(snake->body[i].position.x, snake->body[i].position.y, snake->segmentSize, snake->segmentSize, DARKGREEN);
+        DrawRectangleRounded((Rectangle){snake->body[i].position.x, 
+            snake->body[i].position.y, 
+            snake->segmentSize, 
+            snake->segmentSize},
+            0.3,
+            12, 
+            GREEN);
+        DrawRectangleRoundedLinesEx((Rectangle){snake->body[i].position.x, 
+            snake->body[i].position.y, 
+            snake->segmentSize, 
+            snake->segmentSize},
+            0.3f,
+            12,
+            0.5,
+            DARKGREEN);
     }
+    //eyes
+    DrawCircle(snake->leftEyePos.x, snake->leftEyePos.y, 1.5, WHITE);
+    DrawCircle(snake->rightEyePos.x, snake->rightEyePos.y, 1.5, WHITE);
 }
 
 void updateSnake(Snake *snake, Vector2 direction) {
@@ -30,19 +83,19 @@ void updateSnake(Snake *snake, Vector2 direction) {
         snake->body[i].position = temp;
     }
 
-    if(direction.x == -1 && direction.y == 0) {
+    if(direction.x == (-1)*snake->segmentSize && direction.y == 0) {
         snake->leftEyePos = (Vector2){snake->body[0].position.x+6, snake->body[0].position.y+11};
         snake->rightEyePos = (Vector2){snake->body[0].position.x+6, snake->body[0].position.y+3};
     }
-    else if(direction.x == 1 && direction.y == 0) {
+    else if(direction.x == snake->segmentSize && direction.y == 0) {
         snake->leftEyePos = (Vector2){snake->body[0].position.x+9, snake->body[0].position.y+11};
         snake->rightEyePos = (Vector2){snake->body[0].position.x+9, snake->body[0].position.y+3};
     }
-    else if(direction.x == 0 && direction.y == -1) {
+    else if(direction.x == 0 && direction.y == (-1)*snake->segmentSize) {
         snake->leftEyePos = (Vector2){snake->body[0].position.x+3, snake->body[0].position.y+4};
         snake->rightEyePos = (Vector2){snake->body[0].position.x+11, snake->body[0].position.y+4};
     }
-    else if(direction.x == 0 && direction.y == 1) {
+    else if(direction.x == 0 && direction.y == snake->segmentSize) {
         snake->leftEyePos = (Vector2){snake->body[0].position.x+3, snake->body[0].position.y+10};
         snake->rightEyePos = (Vector2){snake->body[0].position.x+11, snake->body[0].position.y+10};
     }

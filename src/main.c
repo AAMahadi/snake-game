@@ -9,23 +9,41 @@ int main() {
 
     //creating the snake
     Snake snake = {
-        .currentLength = 4,
-        .direction = (Vector2){0, 0},
-        .segmentSize = 15
+        .currentLength = 3,
+        .segmentSize = 16,
     };
 
-    //snakes head position
-    snake.body[0].position = (Vector2){GetScreenWidth() / 2, GetScreenHeight() / 2};
-    //eyse positions
-    snake.leftEyePos = (Vector2){snake.body[0].position.x+6, snake.body[0].position.y+11};
-    snake.rightEyePos = (Vector2){snake.body[0].position.x+6, snake.body[0].position.y+2};
+    snake.direction = (Vector2){0, (-1)*snake.segmentSize};
+    //snakes head position and body initialization
+    snake.body[0].position = (Vector2){(GetScreenWidth() - snake.segmentSize)/ 2, GetScreenHeight() / 2};
+    initSnake(&snake);
 
     SetTargetFPS(60);
     
-    while(!WindowShouldClose()) {
-        //updating snakes position
+    //timer
+    float timer = 0;
 
-        updateSnake(&snake, (Vector2){0, -1});
+    while(!WindowShouldClose()) {
+        timer += GetFrameTime();
+        //boolean declarations
+        bool isGoingUp = (snake.direction.x == 0 &&  snake.direction.y == (-1)*snake.segmentSize);
+        bool isGoingDown= (snake.direction.x == 0 &&  snake.direction.y == snake.segmentSize);
+        bool isGoingRight = (snake.direction.x == snake.segmentSize &&  snake.direction.y == 0);
+        bool isGoingLeft = (snake.direction.x == (-1)*snake.segmentSize &&  snake.direction.y == 0);
+
+        //updating snakes position
+        if(isGoingUp || isGoingDown) {
+            if(IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) snake.direction = (Vector2){snake.segmentSize, 0};
+            else if(IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) snake.direction = (Vector2){(-1)*snake.segmentSize, 0};
+        }
+        if(isGoingRight || isGoingLeft) {
+            if(IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) snake.direction = (Vector2){0, (-1)*snake.segmentSize};
+            else if(IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) snake.direction = (Vector2){0, snake.segmentSize};
+        }
+        if(timer >= 0.2) {
+            updateSnake(&snake, snake.direction);
+            timer = 0;
+        }
 
         BeginDrawing();
             ClearBackground(BLACK);
