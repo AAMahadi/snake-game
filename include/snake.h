@@ -22,6 +22,7 @@ typedef struct {
 void drawSnake(Snake *snake);
 void updateSnake(Snake *snake, Vector2 direction);
 void initSnake(Snake *snake);
+void initSnakeSeg(Snake *snake, int segNum);
 
 
 #endif

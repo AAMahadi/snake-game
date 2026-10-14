@@ -8,7 +8,7 @@ A classic Snake game built with **C and Raylib** as a personal learning project.
 
 - [x] Draw the snake
 - [x] Implement keyboard-controlled movement
-- [ ] Add food and score tracking
+- [x] Add food and score tracking
 - [ ] Detect wall and self-collisions
 - [ ] Add game-over and restart functionality
 - [ ] Add a start menu and difficulty settings
