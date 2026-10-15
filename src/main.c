@@ -55,8 +55,10 @@ int main() {
         if(isFoodEaten(&snake, &food)) {
             score += 1;
             loadFood(&food, GetScreenWidth(), GetScreenHeight());
-            snake.currentLength++;
-            initSnakeSeg(&snake, snake.currentLength);
+            if(snake.currentLength != MAX_LENGTH) {
+                snake.currentLength++;
+                initSnakeSeg(&snake, snake.currentLength);
+            }
         }
 
         //updating snakes position
@@ -70,7 +72,7 @@ int main() {
         }
 
         //game over checking and snake moving
-        if(!isGameOver && timer >= 0.2) {
+        if(!isGameOver && timer >= 0.12) {
             updateSnake(&snake, snake.direction);
             timer = 0;
 

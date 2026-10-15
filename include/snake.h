@@ -3,7 +3,7 @@
 
 #include <raylib.h>
 
-#define MAX_LENGTH 100
+#define MAX_LENGTH 200
 
 typedef struct {
     Vector2 position;

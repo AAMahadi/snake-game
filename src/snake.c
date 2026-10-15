@@ -62,7 +62,7 @@ void drawSnake(Snake *snake) {
             snake->body[i].position.y, 
             snake->segmentSize, 
             snake->segmentSize},
-            0.3,
+            0.3f,
             12, 
             GREEN);
         DrawRectangleRoundedLinesEx((Rectangle){snake->body[i].position.x, 
@@ -75,8 +75,8 @@ void drawSnake(Snake *snake) {
             DARKGREEN);
     }
     //eyes
-    DrawCircle(snake->leftEyePos.x, snake->leftEyePos.y, 1.5, WHITE);
-    DrawCircle(snake->rightEyePos.x, snake->rightEyePos.y, 1.5, WHITE);
+    DrawCircle(snake->leftEyePos.x, snake->leftEyePos.y, 1.5, BLACK);
+    DrawCircle(snake->rightEyePos.x, snake->rightEyePos.y, 1.5, BLACK);
 }
 
 void updateSnake(Snake *snake, Vector2 direction) {

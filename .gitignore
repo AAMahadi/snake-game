@@ -1,0 +1,26 @@
+# Compiled binaries & executables
+main
+*.exe
+*.out
+*.app
+
+# Intermediate object files
+src/*.o
+*.o
+*.obj
+
+# Static and dynamic libraries (e.g., compiled libraylib.a)
+*.a
+*.so
+*.dylib
+*.dll
+
+# OS system files
+.DS_Store
+Thumbs.db
+
+# VS Code & Editor folders
+.vscode/
+.idea/
+*.swp
+*~
