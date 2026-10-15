@@ -2,7 +2,7 @@
 
 void initSnake(Snake *snake) {
     //body segments initialization
-    for(int i = 2; i < snake->currentLength; i++) {
+    for(int i = 2; i <= snake->currentLength; i++) {
         initSnakeSeg(snake, i);
     }
 
@@ -110,4 +110,17 @@ void updateSnake(Snake *snake, Vector2 direction) {
         snake->leftEyePos = (Vector2){snake->body[0].position.x+3, snake->body[0].position.y+10};
         snake->rightEyePos = (Vector2){snake->body[0].position.x+11, snake->body[0].position.y+10};
     }
+}
+
+bool checkWallOrSelfCollisions(Snake *snake, int screenWidth, int screenHeight) {
+    for(int i = 1; i < snake->currentLength; i++) {
+        if(CheckCollisionRecs((Rectangle){snake->body[0].position.x, snake->body[0].position.y, snake->segmentSize, snake->segmentSize}, (Rectangle){snake->body[i].position.x, snake->body[i].position.y, snake->segmentSize, snake->segmentSize})) {
+            return true;
+        }
+    }
+
+    if((snake->body[0].position.x) <= 0 || (snake->body[0].position.x+snake->segmentSize) >= screenWidth || (snake->body[0].position.y) <= 0 || (snake->body[0].position.y+snake->segmentSize) >= screenHeight) {
+        return true;
+    }
+    return false;
 }

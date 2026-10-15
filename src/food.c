@@ -8,8 +8,8 @@ void loadFood(Food *food, int screenWidth, int screenHeight) {
 
 
 
-    food->position.x = (x < (food->foodSize))? (x+food->foodSize): x;
-    food->position.y = (y < (food->foodSize))? (y+food->foodSize): y;
+    food->position.x = (x < (food->foodSize+8))? (x+food->foodSize+8): x;
+    food->position.y = (y < (food->foodSize+8))? (y+food->foodSize+8): y;
 }
 
 void drawFood(Food *food) {

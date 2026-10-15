@@ -8,7 +8,7 @@ int main() {
     srand(time(NULL));
 
     const int screenWidth = 800;
-    const int screenHeight = 550;
+    const int screenHeight = 640;
     
     //initializing a window
     InitWindow(screenWidth, screenHeight, "Snake Game");
@@ -21,7 +21,7 @@ int main() {
 
     snake.direction = (Vector2){0, (-1)*snake.segmentSize};
     //snakes head position and body initialization
-    snake.body[0].position = (Vector2){(GetScreenWidth() - snake.segmentSize)/ 2, GetScreenHeight() / 2};
+    snake.body[0].position = (Vector2){((screenWidth/snake.segmentSize) / 2) * snake.segmentSize, ((screenHeight/snake.segmentSize) / 2) * snake.segmentSize};
     initSnake(&snake);
 
     //food
@@ -34,6 +34,8 @@ int main() {
     //scoring
     int score = 0;
 
+    bool isGameOver = false;
+
     SetTargetFPS(60);
     
     //timer
@@ -41,6 +43,7 @@ int main() {
 
     while(!WindowShouldClose()) {
         timer += GetFrameTime();
+        
         //boolean declarations
         bool isGoingUp = (snake.direction.x == 0 &&  snake.direction.y == (-1)*snake.segmentSize);
         bool isGoingDown= (snake.direction.x == 0 &&  snake.direction.y == snake.segmentSize);
@@ -65,19 +68,50 @@ int main() {
             if(IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) snake.direction = (Vector2){0, (-1)*snake.segmentSize};
             else if(IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) snake.direction = (Vector2){0, snake.segmentSize};
         }
-        if(timer >= 0.2) {
+
+        //game over checking and snake moving
+        if(!isGameOver && timer >= 0.2) {
             updateSnake(&snake, snake.direction);
             timer = 0;
+
+            if(checkWallOrSelfCollisions(&snake, GetScreenWidth(), GetScreenHeight())) {
+                isGameOver = true;
+            }
+        }
+
+        //restart logic
+        if(isGameOver && IsKeyPressed(KEY_R)) {
+            snake.currentLength = 3;
+            snake.segmentSize = 16;
+            snake.direction = (Vector2){0, (-1)*snake.segmentSize};
+            //snakes head position and body initialization
+            snake.body[0].position = (Vector2){((screenWidth/snake.segmentSize) / 2) * snake.segmentSize, ((screenHeight/snake.segmentSize) / 2) * snake.segmentSize};
+            initSnake(&snake);
+
+            score = 0;
+
+            isGameOver = false;
         }
 
         BeginDrawing();
             ClearBackground(BLACK);
+            //drawing boundary
+            DrawRectangleLines(1, 1, 799, 639, WHITE);
             //drawing food
             drawFood(&food);
             //drawing the snake
             drawSnake(&snake);
             //showing score
             DrawText(TextFormat("Score: %d", score), 15, 15, 30, WHITE);
+
+            if(isGameOver) {
+                DrawRectangleRec((Rectangle){0,0, GetScreenWidth(), GetScreenHeight()}, Fade(BLACK, 0.7));
+                DrawText("GAME OVER", (GetScreenWidth()-260)/2, 220,40, RED);
+                DrawText(TextFormat("Score: %d", score), (GetScreenWidth()-120)/2, 280, 25, WHITE);
+                DrawRectangleRounded((Rectangle){(GetScreenWidth()/2 - 110), 340, 220, 50}, 0.3, 12,GREEN);
+                DrawText("Press R to Restart", (GetScreenWidth()/2 - 110) + 10, 355, 20, BLACK);
+                DrawText("Press ESC to Quit", (GetScreenWidth()/2 - 85) + 20, 395, 15, RAYWHITE);
+            }
 
         EndDrawing();
     }
